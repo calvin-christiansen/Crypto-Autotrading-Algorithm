@@ -1,0 +1,70 @@
+# Environment variables and local configuration
+.env
+.env.*
+!.env.example
+*.local
+*.local.*
+*.secret
+*.secrets
+*.credentials
+*.credential
+*.override
+local.properties
+secrets.properties
+credentials.properties
+
+# Private keys, certificates, wallets, and seed material
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.wallet
+*.seed
+*.mnemonic
+*.keyfile
+wallets/
+wallet/
+secrets/
+credentials/
+
+# Logs, runtime state, and potentially sensitive local data
+*.log
+logs/
+data/
+runtime/
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.jsonl
+trades/
+backtest-results/
+
+# Java/Maven build output
+target/
+*.class
+*.jar
+*.war
+*.ear
+dependency-reduced-pom.xml
+
+# IDE and operating-system files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~

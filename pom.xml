@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.solana.memecoin</groupId>
+    <artifactId>solana-memecoin-trader</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Solana Memecoin Trader</name>
+    <description>Autonomous Java-based crypto bot for Solana memecoin trading</description>
+
+    <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Bot Configuration Parameters - OPTIMIZED FOR HIGHER WIN RATE -->
+        <bot.scan.interval.seconds>10</bot.scan.interval.seconds>
+        <bot.min.volume.24h>75000</bot.min.volume.24h>
+        <bot.min.liquidity.usd>25000</bot.min.liquidity.usd>
+        <bot.min.holders>100</bot.min.holders>
+        <bot.min.sentiment.score>0.55</bot.min.sentiment.score>
+        <bot.min.final.score>65</bot.min.final.score>
+        <bot.max.token.age.hours>72</bot.max.token.age.hours>
+        
+        <!-- Risk Parameters - CONSERVATIVE -->
+        <bot.max.position.size.usd>30</bot.max.position.size.usd>
+        <bot.stop.loss.percent>12</bot.stop.loss.percent>
+        <bot.take.profit.percent>40</bot.take.profit.percent>
+        <bot.trailing.stop.percent>8</bot.trailing.stop.percent>
+        <bot.max.concurrent.positions>5</bot.max.concurrent.positions>
+        <bot.max.daily.loss.usd>200</bot.max.daily.loss.usd>
+        
+        <!-- Scoring Weights - BALANCED FOR QUALITY -->
+        <bot.weight.momentum>0.30</bot.weight.momentum>
+        <bot.weight.volume>0.25</bot.weight.volume>
+        <bot.weight.liquidity>0.25</bot.weight.liquidity>
+        <bot.weight.sentiment>0.10</bot.weight.sentiment>
+        <bot.weight.safety>0.10</bot.weight.safety>
+        
+        <!-- API Endpoints -->
+        <bot.api.jupiter.url>https://lite-api.jup.ag/swap/v1</bot.api.jupiter.url>
+        <bot.api.dexscreener.url>https://api.dexscreener.com/latest</bot.api.dexscreener.url>
+        <bot.api.solana.rpc.url>https://api.mainnet-beta.solana.com</bot.api.solana.rpc.url>
+    </properties>
+
+    <dependencies>
+        <!-- HTTP Client -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+
+        <!-- JSON Processing -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
+
+        <!-- Environment Variables -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- Solana Web3 (Using alternative approach with HTTP client) -->
+        <!-- We'll implement Solana RPC calls directly via HTTP -->
+
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+
+        <!-- Database for Trade Logging -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.44.1.0</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.solana.memecoin.MemecoinTraderBot</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.solana.memecoin.MemecoinTraderBot</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.solana.memecoin.MemecoinTraderBot</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>
